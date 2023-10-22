@@ -2,9 +2,10 @@
 #include "Game.h"
 int main(int argc, char* argv[])
 {
-    Game game;
-    game.Initialize();
-    game.Run();
-    game.OnDestroy();
+    Game* game;
+    game = Game::GetInstance();
+    game->Initialize();
+    game->Run();
+    game->OnDestroy();
     return 0;
 }
