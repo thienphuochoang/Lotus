@@ -1,17 +1,17 @@
 #include "Lotus_SDL.h"
-#include "Lotus_Log.h"
+#include "../log/Lotus_Log.h"
 #include "SDL_image.h"
 #include <glm.hpp>
 #include <iostream>
 using namespace std;
 Lotus_SDL::Lotus_SDL()
 {
-    Lotus_Log::Log("LotusSDL constructor called");
+    Lotus_Log::Info("LotusSDL constructor called");
 }
 
 Lotus_SDL::~Lotus_SDL()
 {
-    Lotus_Log::Log("LotusSDL destructor called");
+    Lotus_Log::Info("LotusSDL destructor called");
 }
 
 void Lotus_SDL::Initialize()

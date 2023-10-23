@@ -1,5 +1,5 @@
 #include "Game.h"
-#include "SDL_image.h"
+#include "../sdl/Lotus_SDL.h"
 #include <glm.hpp>
 #include <iostream>
 using namespace std;

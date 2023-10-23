@@ -71,8 +71,8 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <LibraryPath>D:\Tools_Project\Lotus\Lotus\libs\sdl\lib\x64;$(LibraryPath)</LibraryPath>
-    <IncludePath>D:\Tools_Project\Lotus\Lotus\libs\glm;D:\Tools_Project\Lotus\Lotus\libs\sdl\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)\libs\sdl\lib\x64;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)\libs\glm;$(ProjectDir)\libs\sdl\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -113,7 +113,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>D:\Tools_Project\Lotus\Lotus\libs\sdl\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(ProjectDir)\libs\sdl\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -136,15 +136,15 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Game.cpp" />
-    <ClCompile Include="Lotus_Log.cpp" />
-    <ClCompile Include="Lotus_SDL.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="src\game\Game.cpp" />
+    <ClCompile Include="src\log\Lotus_Log.cpp" />
+    <ClCompile Include="src\sdl\Lotus_SDL.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Game.h" />
-    <ClInclude Include="Lotus_Log.h" />
-    <ClInclude Include="Lotus_SDL.h" />
+    <ClInclude Include="src\game\Game.h" />
+    <ClInclude Include="src\log\Lotus_Log.h" />
+    <ClInclude Include="src\sdl\Lotus_SDL.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

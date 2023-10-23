@@ -1,6 +1,6 @@
 #pragma once
 #include <SDL.h>
-#include "Lotus_SDL.h"
+#include "../sdl/Lotus_SDL.h"
 #define FPS 60
 #define MILLISECS_PER_FRAME (1000/FPS)
 class Game
