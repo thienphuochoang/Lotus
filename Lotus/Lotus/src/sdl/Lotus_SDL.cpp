@@ -55,13 +55,13 @@ void Lotus_SDL::Run()
     }
 }
 
-glm::vec2 playerPosition;
-glm::vec2 playerVelocity;
-
 void Lotus_SDL::Setup()
 {
-    playerPosition = glm::vec2(10, 20);
-    playerVelocity = glm::vec2(10, 0);
+    // TODO: 
+    // Entity tank = EntityManager.CreateEntity();
+    // tank.AddComponent<TransformComponent>();
+    // tank.AddComponent<BoxColliderComponent>();
+    // tank.AddComponent<SpriteComponent>("./art/......."/tank.png);
 }
 
 void Lotus_SDL::ProcessInput()
@@ -101,21 +101,16 @@ void Lotus_SDL::Update()
     }
     float deltaTime = (SDL_GetTicks() - millisecsPreviousFrame) / 1000.0f;
     millisecsPreviousFrame = SDL_GetTicks();
-    playerPosition.x += playerVelocity.x * deltaTime;
-    playerPosition.y += playerVelocity.y * deltaTime;
+    // TODO: 
+    // MovementSystem.Update();
+    // CollisionSystem.Update();
+    // DamageSystem.Update();
 }
 
 void Lotus_SDL::Render()
 {
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
-
-    SDL_Surface* surface = IMG_Load("./art/Character/Enemy-Carrot/Sprite-Sheets/carrot@idle-sheet.png");
-    SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
-    SDL_FreeSurface(surface);
-    SDL_Rect dstRect = { playerPosition.x, playerPosition.y, 640, 128 };
-    SDL_RenderCopy(renderer, texture, NULL, &dstRect);
-    SDL_DestroyTexture(texture);
 
 
     SDL_RenderPresent(renderer);
