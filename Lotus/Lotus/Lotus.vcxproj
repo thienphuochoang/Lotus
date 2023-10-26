@@ -137,14 +137,23 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="src\entities\Entity.cpp" />
     <ClCompile Include="src\game\Game.cpp" />
     <ClCompile Include="src\log\Lotus_Log.cpp" />
     <ClCompile Include="src\sdl\Lotus_SDL.cpp" />
+    <ClCompile Include="src\systems\System.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\components\Component.h" />
+    <ClInclude Include="src\components\TransformComponent.h" />
+    <ClInclude Include="src\ecs\ECS.h" />
+    <ClInclude Include="src\entities\Entity.h" />
     <ClInclude Include="src\game\Game.h" />
     <ClInclude Include="src\log\Lotus_Log.h" />
+    <ClInclude Include="src\managers\EntityManager.h" />
     <ClInclude Include="src\sdl\Lotus_SDL.h" />
+    <ClInclude Include="src\systems\MovementSystem.h" />
+    <ClInclude Include="src\systems\System.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
