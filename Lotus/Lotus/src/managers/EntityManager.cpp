@@ -25,5 +25,28 @@ Entity EntityManager::CreateEntity()
 template<typename TComponent, typename ...TArgs>
 void EntityManager::AddComponent(Entity entity, TArgs ...args)
 {
+    const int componentId = Component<TComponent>::GetId();
+    const int entityId = entity.GetId();
 
+    if (componentId >= componentCollections.size())
+    {
+        componentCollections.resize(componentId + 1, nullptr);
+    }
+
+    if (!componentCollections[componentId])
+    {
+        Collection<TComponent>* newComponentCollection = new Collection<TComponent>();
+        componentCollections[componentId] = newComponentCollection;
+    }
+
+    Collection<TComponent>* componentCollection = componentCollection[componentId];
+
+    if (entityId >= componentCollection->GetSize())
+    {
+        componentCollection->Resize(numberOfEntities);
+    }
+    TComponent newComponent(std::forward<TArgs>(args)...);
+    componentCollection->Set(entityId, newComponent);
+    entityComponentSignatures[entityId].set(componentId);
+    
 }
