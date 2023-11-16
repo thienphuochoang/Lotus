@@ -2,6 +2,8 @@
 #include "../log/Lotus_Log.h"
 #include "../components/Component.h"
 
+int IComponent::nextId = 0;
+
 void EntityManager::Update()
 {
     // TODO: 
@@ -48,5 +50,21 @@ void EntityManager::AddComponent(Entity entity, TArgs ...args)
     TComponent newComponent(std::forward<TArgs>(args)...);
     componentCollection->Set(entityId, newComponent);
     entityComponentSignatures[entityId].set(componentId);
-    
+}
+template <typename TComponent>
+void EntityManager::RemoveComponent(Entity entity)
+{
+    const int componentId = Component<TComponent>::GetId();
+    const int entityId = entity.GetId();
+
+    entityComponentSignatures[entityId].set(componentId, false);
+}
+
+template <typename TComponent>
+bool EntityManager::HasComponent(Entity entity) const
+{
+    const int componentId = Component<TComponent>::GetId();
+    const int entityId = entity.GetId();
+
+    entityComponentSignatures[entityId].test(componentId);
 }

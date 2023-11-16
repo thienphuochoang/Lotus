@@ -39,9 +39,9 @@ public:
     // AddComponent(Entity entity)
     template <typename TComponent, typename ...TArgs> void AddComponent(Entity entity, TArgs ...args);
     // RemoveComponent(Entity entity)
-    template <typename T> void RemoveComponent(Entity entity);
+    template <typename TComponent> void RemoveComponent(Entity entity);
     // HasComponent(Entity entity)
-    template <typename T> bool HasComponent(Entity entity) const;
+    template <typename TComponent> bool HasComponent(Entity entity) const;
     // GetComponent(Entity entity)
     template <typename T> T& GetComponent(Entity entity) const;
     // AddSystem
