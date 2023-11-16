@@ -68,3 +68,51 @@ bool EntityManager::HasComponent(Entity entity) const
 
     entityComponentSignatures[entityId].test(componentId);
 }
+
+template<typename TSystem, typename ...TArgs>
+void EntityManager::AddSystem(TArgs ...args)
+{
+    TSystem* newSystem(new TSystem(args...));
+    systems.insert(std::make_pair(std::type_index(typeid(TSystem)), newSystem));
+}
+
+template<typename TSystem>
+void EntityManager::RemoveSystem()
+{
+    auto system = systems.find(std::type_index(typeid(TSystem)));
+    systems.erase(system);
+}
+
+template<typename TSystem>
+bool EntityManager::HasSystem() const
+{
+    return systems.find(std::type_index(typeid(TSystem))) != systems.end();
+}
+
+template<typename TSystem>
+TSystem& EntityManager::GetSystem() const
+{
+    auto system = systems.find(std::type_index(typeid(TSystem)));
+    return *dynamic_cast<TSystem>(system->second);
+}
+
+void EntityManager::AddEntityToSystems(Entity entity)
+{
+    const int entityId = entity.GetId();
+
+    //Match entityComponentSignature and systemComponentSignature
+    const auto& entityComponentSignature = entityComponentSignatures[entityId];
+
+    // Loop all the systems
+    for (auto& system : systems)
+    {
+        const auto& systemComponentSignature = system.second->GetComponentSignature();
+
+        bool isInterested = (entityComponentSignature & systemComponentSignature) == systemComponentSignature;
+        if (isInterested)
+        {
+            //Add the entity to the system
+            system.second->AddEntityToSystem(entity);
+        }
+    }
+}

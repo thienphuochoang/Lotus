@@ -43,9 +43,17 @@ public:
     // HasComponent(Entity entity)
     template <typename TComponent> bool HasComponent(Entity entity) const;
     // GetComponent(Entity entity)
-    template <typename T> T& GetComponent(Entity entity) const;
+    //template <typename T> T& GetComponent(Entity entity) const;
     // AddSystem
+    template <typename TSystem, typename ...TArgs> void AddSystem(TArgs ...args);
     // RemoveSystem
+    template <typename TSystem> void RemoveSystem();
     // HasSystem
+    template <typename TSystem> bool HasSystem() const;
     // GetSystem
+    template <typename TSystem> TSystem& GetSystem() const;
+
+    // Check the component signature of an entity and add the entity to the systems
+    // that are interested in it
+    void AddEntityToSystems(Entity entity);
 };
