@@ -3,9 +3,12 @@
 #include "SDL_image.h"
 #include <glm.hpp>
 #include <iostream>
+#include "../components/TransformComponent.h"
+#include "../components/RigidBodyComponent.h"
 using namespace std;
 Lotus_SDL::Lotus_SDL()
 {
+    registry = std::make_unique<EntityManager>();
     Lotus_Log::Info("LotusSDL constructor called");
 }
 
@@ -58,7 +61,12 @@ void Lotus_SDL::Run()
 void Lotus_SDL::Setup()
 {
     // TODO: 
-    // Entity tank = EntityManager.CreateEntity();
+    // Create some entities
+    Entity tank = registry->CreateEntity();
+    Entity truck = registry->CreateEntity();
+    // Add components to entity
+    registry->AddComponent<TransformComponent>(tank, glm::vec2(10.0f, 30.0f), glm::vec2(1.0f, 1.0f), 0.0f);
+    registry->AddComponent<RigidBodyComponent>(tank, glm::vec2(10.0f, 0.0f));
     // tank.AddComponent<TransformComponent>();
     // tank.AddComponent<BoxColliderComponent>();
     // tank.AddComponent<SpriteComponent>("./art/......."/tank.png);

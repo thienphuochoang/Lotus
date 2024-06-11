@@ -9,6 +9,7 @@ protected:
 template <typename T>
 class Component : public IComponent
 {
+public:
     // Get the unique id of Component<T>
     static int GetId()
     {

@@ -1,9 +1,8 @@
 #include <iostream>
-#include "./src/game/Game.h"
+#include "./src/sdl/Lotus_SDL.h"
 int main(int argc, char* argv[])
 {
-    Game* game;
-    game = Game::GetInstance();
+    std::unique_ptr<Lotus_SDL> game = std::make_unique<Lotus_SDL>();
     game->Initialize();
     game->Run();
     game->OnDestroy();
