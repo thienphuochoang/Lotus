@@ -1,9 +1,40 @@
-#include "EntityManager.h"
+#include "ECS.h"
 #include "../log/Lotus_Log.h"
-#include "../components/Component.h"
-#include <memory>
+#include <algorithm>
 
 int IComponent::nextId = 0;
+
+int Entity::GetId() const
+{
+    return id;
+}
+
+void System::AddEntityToSystem(Entity entity)
+{
+    entities.push_back(entity);
+}
+
+void System::RemoveEntityFromSystem(Entity entity)
+{
+    for (int i = 0; i < entities.size(); i++)
+    {
+        if (entities[i] == entity)
+        {
+            entities.erase(entities.begin() + i);
+            i--;
+        }
+    }
+}
+
+std::vector<Entity> System::GetSystemEntities() const
+{
+    return entities;
+}
+
+const Signature& System::GetComponentSignature() const
+{
+    return componentSignature;
+}
 
 void EntityManager::Update()
 {
@@ -38,7 +69,6 @@ Entity EntityManager::CreateEntity()
     Lotus_Log::Info("Entity created with id: " + std::to_string(entityId));
     return newEntity;
 }
-
 
 void EntityManager::AddEntityToSystems(Entity entity)
 {

@@ -1,22 +1,30 @@
 #pragma once
-#include "System.h"
-#include "../managers/EntityManager.h"
+#include "../ecs/ECS.h"
+#include "../components/TransformComponent.h"
+#include "../components/RigidBodyComponent.h"
+
 class MovementSystem : public System
 {
 public:
     MovementSystem()
     {
-        // TODO: 
-        // RequireComponent <TransformComponent>();
-        // RequireComponent <...>();
+        RequireComponent<TransformComponent>();
+        RequireComponent<RigidBodyComponent>();
     }
-    void Update()
+    void Update(double deltaTime)
     {
-        // TODO: Loop all entities
-        for (auto object : EntityManager::GetEntities())
+        // Loop all entities that the system is interested in 
+        for (auto entity : GetSystemEntities())
         {
-            // TODO:
-            // Update entity position based on its velocity every frame of the loop
+            // Update entity position based on its velocity
+            auto& transform = entity.GetComponent<TransformComponent>();
+            const auto rigidbody = entity.GetComponent<RigidBodyComponent>();
+            transform.position.x += rigidbody.velocity.x * deltaTime;
+            transform.position.y += rigidbody.velocity.y * deltaTime;
+
+            Lotus_Log::Info("Entity id = " + std::to_string(entity.GetId()) +
+                " position is " + std::to_string(transform.position.x) + ", " +
+            std::to_string(transform.position.y));
         }
     }
 

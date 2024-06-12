@@ -1,7 +1,6 @@
 #pragma once
 #include <SDL.h>
-#include "../managers/EntityManager.h"
-#include <memory>
+#include "../ecs/ECS.h"
 #define FPS 60
 #define MILLISECS_PER_FRAME (1000/FPS)
 class Lotus_SDL
