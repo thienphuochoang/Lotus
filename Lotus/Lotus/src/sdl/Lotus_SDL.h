@@ -1,6 +1,7 @@
 #pragma once
 #include <SDL.h>
 #include "../ecs/ECS.h"
+#include "../assets/Asset.h"
 #define FPS 60
 #define MILLISECS_PER_FRAME (1000/FPS)
 class Lotus_SDL
@@ -11,6 +12,7 @@ private:
     int millisecsPreviousFrame = 0;
     bool quit = false;
     std::unique_ptr<EntityManager> registry;
+    std::unique_ptr<Asset> assets;
 public:
     Lotus_SDL();
     ~Lotus_SDL();
@@ -21,5 +23,6 @@ public:
     void Update();
     void Render();
     void OnDestroy();
+    void LoadLevel(int level);
 };
 

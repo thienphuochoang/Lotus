@@ -6,6 +6,7 @@
 #include <unordered_map>
 #include <typeindex>
 #include <memory>
+#include <deque>
 const unsigned int MAX_COMPONENTS = 32;
 // Signature
 // A bitset (1's and 0's) to keep track of which components an entity has
@@ -50,6 +51,7 @@ public:
     template<typename TComponent> bool HasComponent() const;
     template<typename TComponent> TComponent& GetComponent() const;
     class EntityManager* registry;
+    void Destroy();
 };
 
 class System
@@ -167,6 +169,9 @@ private:
     std::set<Entity> entitiesNeedToBeAdded;
     // Set of entities that are flagged to be removed in the next Update() frame
     std::set<Entity> entitiesNeedToBeRemoved;
+
+    // List of free entity ids that are removed
+    std::deque<int> freeIds;
 public:
     EntityManager() { Lotus_Log::Info("Registry constructor called! "); };
     ~EntityManager() { Lotus_Log::Info("Registry destructor called! "); };
@@ -175,6 +180,7 @@ public:
     // Create an entity
     Entity CreateEntity();
     // Remove an entity
+    void RemoveEntity(Entity entity);
     // AddComponent(Entity entity)
     template <typename TComponent, typename ...TArgs> void AddComponent(Entity entity, TArgs&& ...args);
     // RemoveComponent(Entity entity)
@@ -195,6 +201,9 @@ public:
     // Check the component signature of an entity and add the entity to the systems
     // that are interested in it
     void AddEntityToSystems(Entity entity);
+
+    // Remove entities from the systems
+    void RemoveEntityFromSystems(Entity entity);
 };
 template <typename TComponent>
 void EntityManager::RemoveComponent(Entity entity)
