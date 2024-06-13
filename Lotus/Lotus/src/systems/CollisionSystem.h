@@ -2,6 +2,8 @@
 #include "../ecs/ECS.h"
 #include "../components/BoxColliderComponent.h"
 #include "../components/TransformComponent.h"
+#include "../events/EventManager.h"
+#include "../events/CollisionEvent.h"
 class CollisionSystem : public System
 {
 public:
@@ -10,7 +12,7 @@ public:
         RequireComponent<TransformComponent>();
         RequireComponent<BoxColliderComponent>();
     }
-    void Update()
+    void Update(std::unique_ptr<EventManager>& eventManager)
     {
         auto entities = GetSystemEntities();
 
@@ -45,6 +47,7 @@ public:
                 if (IsColliding)
                 {
                     Lotus_Log::Info("Entity " + std::to_string(a.GetId()) + " is colliding with entity " + std::to_string(b.GetId()));
+                    eventManager->EmitEvent<CollisionEvent>(a, b);
                 }
             }
         }

@@ -11,6 +11,8 @@
 #include "../systems/AnimationSystem.h"
 #include "../systems/CollisionSystem.h"
 #include "../systems/RenderColliderSystem.h"
+#include "../systems/DamageSystem.h"
+#include "../systems/KeyboardControlSystem.h"
 #include <SDL.h>
 #include <SDL_image.h>
 #include <glm.hpp>
@@ -21,6 +23,7 @@ Lotus_SDL::Lotus_SDL()
 {
     registry = std::make_unique<EntityManager>();
     assets = std::make_unique<Asset>();
+    eventManager = std::make_unique<EventManager>();
     Lotus_Log::Info("LotusSDL constructor called");
 }
 
@@ -95,9 +98,11 @@ void Lotus_SDL::ProcessInput()
                     case SDLK_ESCAPE:
                     {
                         quit = true;
-                        break;
                     }
+                    
                 }
+                eventManager->EmitEvent<KeyPressedEvent>(currentEvents.key.keysym.sym);
+                break;
             }
         }
     }
@@ -113,13 +118,20 @@ void Lotus_SDL::Update()
     double deltaTime = (SDL_GetTicks() - millisecsPreviousFrame) / 1000.0f;
     millisecsPreviousFrame = SDL_GetTicks();
     
+    // Reset all event handlers for the current frame
+    eventManager->Reset();
+    
+    // Execute the subscriptions of the events for all systems
+    registry->GetSystem<DamageSystem>().SubscribeToEvents(eventManager);
+    registry->GetSystem<KeyboardControlSystem>().SubscribeToEvents(eventManager);
+
     // Update the registry to process the entities that are waiting to be created or removed
     registry->Update();
 
     // Update the systems
     registry->GetSystem<MovementSystem>().Update(deltaTime);
     registry->GetSystem<AnimationSystem>().Update();
-    registry->GetSystem<CollisionSystem>().Update();
+    registry->GetSystem<CollisionSystem>().Update(eventManager);
 
     // CollisionSystem.Update();
     // DamageSystem.Update();
@@ -151,7 +163,8 @@ void Lotus_SDL::LoadLevel(int level)
     registry->AddSystem<AnimationSystem>();
     registry->AddSystem<CollisionSystem>();
     registry->AddSystem<RenderColliderSystem>();
-    
+    registry->AddSystem<DamageSystem>();
+    registry->AddSystem<KeyboardControlSystem>();
 
     // Adding assets
     assets->AddTexture(renderer, "soldier1-image", "./assets/images/soldier1.png");

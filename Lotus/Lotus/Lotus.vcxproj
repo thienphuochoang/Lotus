@@ -150,10 +150,15 @@
     <ClInclude Include="src\components\SpriteComponent.h" />
     <ClInclude Include="src\components\TransformComponent.h" />
     <ClInclude Include="src\ecs\ECS.h" />
+    <ClInclude Include="src\events\CollisionEvent.h" />
+    <ClInclude Include="src\events\EventManager.h" />
+    <ClInclude Include="src\events\KeyPressedEvent.h" />
     <ClInclude Include="src\log\Lotus_Log.h" />
     <ClInclude Include="src\sdl\Lotus_SDL.h" />
     <ClInclude Include="src\systems\AnimationSystem.h" />
     <ClInclude Include="src\systems\CollisionSystem.h" />
+    <ClInclude Include="src\systems\DamageSystem.h" />
+    <ClInclude Include="src\systems\KeyboardControlSystem.h" />
     <ClInclude Include="src\systems\MovementSystem.h" />
     <ClInclude Include="src\systems\RenderColliderSystem.h" />
     <ClInclude Include="src\systems\RenderSystem.h" />
