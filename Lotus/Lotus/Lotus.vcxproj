@@ -146,6 +146,11 @@
     <ClInclude Include="src\assets\Asset.h" />
     <ClInclude Include="src\components\AnimationComponent.h" />
     <ClInclude Include="src\components\BoxColliderComponent.h" />
+    <ClInclude Include="src\components\CameraComponent.h" />
+    <ClInclude Include="src\components\HealthComponent.h" />
+    <ClInclude Include="src\components\KeyboardControlComponent.h" />
+    <ClInclude Include="src\components\ProjectileComponent.h" />
+    <ClInclude Include="src\components\ProjectileEmitterComponent.h" />
     <ClInclude Include="src\components\RigidBodyComponent.h" />
     <ClInclude Include="src\components\SpriteComponent.h" />
     <ClInclude Include="src\components\TransformComponent.h" />
@@ -156,10 +161,13 @@
     <ClInclude Include="src\log\Lotus_Log.h" />
     <ClInclude Include="src\sdl\Lotus_SDL.h" />
     <ClInclude Include="src\systems\AnimationSystem.h" />
+    <ClInclude Include="src\systems\CameraMovementSystem.h" />
     <ClInclude Include="src\systems\CollisionSystem.h" />
     <ClInclude Include="src\systems\DamageSystem.h" />
     <ClInclude Include="src\systems\KeyboardControlSystem.h" />
     <ClInclude Include="src\systems\MovementSystem.h" />
+    <ClInclude Include="src\systems\ProjectileEmitSystem.h" />
+    <ClInclude Include="src\systems\ProjectileSystem.h" />
     <ClInclude Include="src\systems\RenderColliderSystem.h" />
     <ClInclude Include="src\systems\RenderSystem.h" />
   </ItemGroup>

@@ -221,7 +221,7 @@ bool EntityManager::HasComponent(Entity entity) const
     const int componentId = Component<TComponent>::GetId();
     const int entityId = entity.GetId();
 
-    entityComponentSignatures[entityId].test(componentId);
+    return entityComponentSignatures[entityId].test(componentId);
 }
 
 template<typename TComponent>

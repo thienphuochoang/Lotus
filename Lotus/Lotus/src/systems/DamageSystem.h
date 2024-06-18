@@ -18,7 +18,7 @@ public:
     void onCollision(CollisionEvent& event)
     {
         Lotus_Log::Info("Event triggered between 2 entities, entity " + std::to_string(event.a.GetId()) + " and entity " + std::to_string(event.b.GetId()));
-        event.a.Destroy();
-        event.b.Destroy();
+        //event.a.Destroy();
+        //event.b.Destroy();
     }
 };

@@ -10,6 +10,7 @@ class Lotus_SDL
 private:
     SDL_Window* window;
     SDL_Renderer* renderer;
+    SDL_Rect camera;
     int millisecsPreviousFrame = 0;
     bool quit = false;
     std::unique_ptr<EntityManager> registry;
@@ -26,5 +27,10 @@ public:
     void Render();
     void OnDestroy();
     void LoadLevel(int level);
+
+    static int WINDOW_WIDTH;
+    static int WINDOW_HEIGHT;
+    static int MAP_WIDTH;
+    static int MAP_HEIGHT;
 };
 
