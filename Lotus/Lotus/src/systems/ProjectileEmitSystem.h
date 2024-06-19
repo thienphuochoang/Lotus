@@ -88,6 +88,7 @@ public:
 
                 // Add a new projectile entity to the registry
                 Entity projectile = registry->CreateEntity();
+                projectile.Group("projectiles");
                 projectile.AddComponent<TransformComponent>(projectilePosition, glm::vec2(1.0, 1.0), 0.0);
                 projectile.AddComponent<RigidBodyComponent>(projectileEmitter.projectileVelocity);
                 projectile.AddComponent<SpriteComponent>("bullet-image", 4, false, 4, 4);

@@ -53,8 +53,8 @@ void Lotus_SDL::Initialize()
     }
     SDL_DisplayMode displayMode;
     SDL_GetCurrentDisplayMode(0, &displayMode);
-    WINDOW_WIDTH = displayMode.w;
-    WINDOW_HEIGHT = displayMode.h;
+    WINDOW_WIDTH = 1280;
+    WINDOW_HEIGHT = 720;
     window = SDL_CreateWindow("Lotus",
         SDL_WINDOWPOS_CENTERED,
         SDL_WINDOWPOS_CENTERED,
@@ -77,7 +77,7 @@ void Lotus_SDL::Initialize()
     camera.y = 0;
     camera.w = WINDOW_WIDTH;
     camera.h = WINDOW_HEIGHT;
-    SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN);
+    //SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN);
 }
 
 void Lotus_SDL::Run()
@@ -161,7 +161,7 @@ void Lotus_SDL::Render()
     SDL_RenderClear(renderer);
 
     registry->GetSystem<RenderSystem>().Update(renderer, assets, camera);
-    //registry->GetSystem<RenderColliderSystem>().Update(renderer, camera);
+    registry->GetSystem<RenderColliderSystem>().Update(renderer, camera);
 
     SDL_RenderPresent(renderer);
 }
@@ -212,6 +212,7 @@ void Lotus_SDL::LoadLevel(int level)
             mapFile.ignore();
 
             Entity tile = registry->CreateEntity();
+            tile.Group("tiles");
             tile.AddComponent<TransformComponent>(glm::vec2(x * (tileScale * tileSize),
                 y * (tileScale * tileSize)),
                 glm::vec2(tileScale, tileScale),
@@ -237,7 +238,8 @@ void Lotus_SDL::LoadLevel(int level)
         glm::vec2(100, 0));
     soldier.AddComponent<CameraComponent>();
     soldier.AddComponent<HealthComponent>(100);
-    soldier.AddComponent<ProjectileEmitterComponent>(glm::vec2(150.0, 150.0), 0, 5000, 0, true);
+    soldier.AddComponent<ProjectileEmitterComponent>(glm::vec2(150.0, 150.0), 0, 5000, 10, true);
+    soldier.Tag("player");
 
     // Create some entities
     Entity soldier2 = registry->CreateEntity();
@@ -247,6 +249,7 @@ void Lotus_SDL::LoadLevel(int level)
     soldier2.AddComponent<SpriteComponent>("soldier2-image", 2, false, 64, 64);
     soldier2.AddComponent<AnimationComponent>(8, 10, true);
     soldier2.AddComponent<BoxColliderComponent>(32, 32, glm::vec2(16, 16));
-    soldier2.AddComponent<ProjectileEmitterComponent>(glm::vec2(100.0, 0.0), 5000, 1000, 0, false);
+    soldier2.AddComponent<ProjectileEmitterComponent>(glm::vec2(100.0, 0.0), 5000, 1000, 50, false);
     soldier2.AddComponent<HealthComponent>(100);
+    soldier2.Group("enemies");
 }

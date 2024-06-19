@@ -7,6 +7,7 @@
 #include <typeindex>
 #include <memory>
 #include <deque>
+#include <iostream>
 const unsigned int MAX_COMPONENTS = 32;
 // Signature
 // A bitset (1's and 0's) to keep track of which components an entity has
@@ -52,6 +53,12 @@ public:
     template<typename TComponent> TComponent& GetComponent() const;
     class EntityManager* registry;
     void Destroy();
+
+    // Tag and group management functions
+    void Tag(const std::string& tag);
+    bool HasTag(const std::string& tag) const;
+    void Group(const std::string& group);
+    bool BelongsToGroup(const std::string& group) const;
 };
 
 class System
@@ -75,15 +82,26 @@ public:
 class ICollection
 {
 public:
-    virtual ~ICollection() {};
+    virtual ~ICollection() = default;
+    virtual void RemoveEntityFromCollection(int entityId) = 0;
 };
 template <typename T>
 class Collection : public ICollection
 {
 private:
+    // We keep track of the vector of objects and the current number of elements
     std::vector<T> data;
+    int size;
+
+    // Helper maps to keep track of entity ids per index, so the vector is always packed
+    std::unordered_map<int, int> entityIdToIndex;
+    std::unordered_map<int, int> indexToEntityId;
 public:
-    Collection(int size = 100);
+    Collection(int capacity = 100)
+    {
+        size = 0;
+        data.resize(capacity);
+    }
     virtual ~Collection() = default;
     bool IsEmpty() const;
     int GetSize() const;
@@ -93,23 +111,20 @@ public:
     void Set(int index, T object);
     T& Get(int index);
     T& operator [](unsigned int index);
+    void Remove(int entityId);
+    void RemoveEntityFromCollection(int entityId) override;
 };
 
 template <typename T>
-Collection<T>::Collection(int size)
-{
-    data.resize(size);
-}
-template <typename T>
 bool Collection<T>::IsEmpty() const
 {
-    return data.empty();
+    return size == 0;
 }
 
 template<typename T>
 int Collection<T>::GetSize() const
 {
-    return data.size();
+    return size;
 }
 
 template<typename T>
@@ -122,6 +137,7 @@ template<typename T>
 void Collection<T>::Clear()
 {
     data.clear();
+    size = 0;
 }
 
 template<typename T>
@@ -131,14 +147,35 @@ void Collection<T>::Add(T object)
 }
 
 template<typename T>
-void Collection<T>::Set(int index, T object)
+void Collection<T>::Set(int entityId, T object)
 {
-    data[index] = object;
+    if (entityIdToIndex.find(entityId) != entityIdToIndex.end())
+    {
+        // If the element already exists, simply replace the component object
+        int index = entityIdToIndex[entityId];
+        data[index] = object;
+    }
+    else
+    {
+        // When adding a new object, we keep track of the entity ids
+        // and their vector
+        int index = size;
+        entityIdToIndex.emplace(entityId, index);
+        indexToEntityId.emplace(index, entityId);
+        if (index >= data.capacity())
+        {
+            // We resize by always doubling the current capacity
+            data.resize(size * 2);
+        }
+        data[index] = object;
+        size++;
+    }
 }
 
 template<typename T>
-T& Collection<T>::Get(int index)
+T& Collection<T>::Get(int entityId)
 {
+    int index = entityIdToIndex[entityId];
     return static_cast<T&>(data[index]);
 }
 
@@ -146,6 +183,34 @@ template<typename T>
 T& Collection<T>::operator [](unsigned int index)
 {
     return data[index];
+}
+
+template<typename T>
+void Collection<T>::Remove(int entityId)
+{
+    // Copy the last element to the removed position to keep the array packed
+    int indexOfRemoved = entityIdToIndex[entityId];
+    int indexOfLast = size - 1;
+    data[indexOfRemoved] = data[indexOfLast];
+
+    // Update the index-entity maps to point to the correct elements
+    int entityIdOfLastElement = indexToEntityId[indexOfLast];
+    entityIdToIndex[entityIdOfLastElement] = indexOfRemoved;
+    indexToEntityId[indexOfRemoved] = entityIdOfLastElement;
+
+    entityIdToIndex.erase(entityId);
+    indexToEntityId.erase(indexOfLast);
+
+    size--;
+}
+
+template<typename T>
+void Collection<T>::RemoveEntityFromCollection(int entityId)
+{
+    if (entityIdToIndex.find(entityId) != entityIdToIndex.end())
+    {
+        Remove(entityId);
+    }
 }
 
 class EntityManager
@@ -172,11 +237,19 @@ private:
 
     // List of free entity ids that are removed
     std::deque<int> freeIds;
+
+    // Entity tags (one tag name per entity)
+    std::unordered_map<std::string, Entity> entityPerTag;
+    std::unordered_map<int, std::string> tagPerEntity;
+
+    // Entity groups (a set of entities per group name)
+    std::unordered_map<std::string, std::set<Entity>> entitiesPerGroup;
+    std::unordered_map<int, std::string> groupPerEntity;
+
 public:
     EntityManager() { Lotus_Log::Info("Registry constructor called! "); };
     ~EntityManager() { Lotus_Log::Info("Registry destructor called! "); };
     void Update();
-    // TODO
     // Create an entity
     Entity CreateEntity();
     // Remove an entity
@@ -204,6 +277,18 @@ public:
 
     // Remove entities from the systems
     void RemoveEntityFromSystems(Entity entity);
+
+    // Tag management functions
+    void TagEntity(Entity entity, const std::string& tag);
+    bool EntityHasTag(Entity entity, const std::string& tag) const;
+    Entity GetEntityByTag(const std::string& tag) const;
+    void RemoveEntityTag(Entity entity);
+
+    // Group management
+    void GroupEntity(Entity entity, const std::string& group);
+    bool EntityBelongsToGroup(Entity entity, const std::string& group) const;
+    std::vector<Entity> GetEntitiesByGroup(const std::string& group) const;
+    void RemoveEntityGroup(Entity entity);
 };
 template <typename TComponent>
 void EntityManager::RemoveComponent(Entity entity)
@@ -212,6 +297,14 @@ void EntityManager::RemoveComponent(Entity entity)
     const int entityId = entity.GetId();
 
     entityComponentSignatures[entityId].set(componentId, false);
+
+    // Remove the component from the component list for that entity
+    std::shared_ptr<Collection<TComponent>> componentCollection = std::static_pointer_cast<Collection<TComponent>>(componentCollections[componentId]);
+    componentCollection->Remove(entityId);
+
+    // Set this component signature for that entity to false
+    entityComponentSignatures[entityId].set(componentId, false);
+
     Lotus_Log::Info("Component ID: " + std::to_string(componentId) + " was REMOVED from entity ID" + std::to_string(entityId));
 }
 
@@ -280,10 +373,6 @@ void EntityManager::AddComponent(Entity entity, TArgs&& ...args)
 
     std::shared_ptr<Collection<TComponent>> componentCollection = std::static_pointer_cast<Collection<TComponent>>(componentCollections[componentId]);
 
-    if (entityId >= componentCollection->GetSize())
-    {
-        componentCollection->Resize(numberOfEntities);
-    }
     TComponent newComponent(std::forward<TArgs>(args)...);
     componentCollection->Set(entityId, newComponent);
     entityComponentSignatures[entityId].set(componentId);

@@ -33,8 +33,6 @@ public:
             camera.y = camera.y < 0 ? 0 : camera.y;
             camera.x = camera.x > camera.w ? camera.w : camera.x;
             camera.y = camera.y > camera.h ? camera.h : camera.y;
-
-            Lotus_Log::Info("Camera changed its position to: " + std::to_string(camera.x) + " " + std::to_string(camera.y));
         }
     }
 };
