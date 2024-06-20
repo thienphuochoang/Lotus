@@ -71,8 +71,12 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IncludePath>$(ProjectDir)\libs\sdl\include;$(ProjectDir)\libs\glm;$(ProjectDir)\libs\imgui;$(IncludePath)</IncludePath>
     <LibraryPath>$(ProjectDir)\libs\sdl\lib\x64;$(LibraryPath)</LibraryPath>
-    <IncludePath>$(ProjectDir)\libs\glm;$(ProjectDir)\libs\sdl\include;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <IncludePath>$(ProjectDir)\libs\sdl\include;$(ProjectDir)\libs\glm;$(ProjectDir)\libs\imgui;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)\libs\sdl\lib\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -112,7 +116,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_ttf.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(ProjectDir)\libs\sdl\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
@@ -130,12 +134,20 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_ttf.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="libs\imgui\backends\imgui_impl_sdl2.cpp" />
+    <ClCompile Include="libs\imgui\backends\imgui_impl_sdlrenderer2.cpp" />
+    <ClCompile Include="libs\imgui\imgui.cpp" />
+    <ClCompile Include="libs\imgui\imgui_demo.cpp" />
+    <ClCompile Include="libs\imgui\imgui_draw.cpp" />
+    <ClCompile Include="libs\imgui\imgui_tables.cpp" />
+    <ClCompile Include="libs\imgui\imgui_widgets.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="src\assets\Asset.cpp" />
     <ClCompile Include="src\ecs\ECS.cpp" />
@@ -153,6 +165,7 @@
     <ClInclude Include="src\components\ProjectileEmitterComponent.h" />
     <ClInclude Include="src\components\RigidBodyComponent.h" />
     <ClInclude Include="src\components\SpriteComponent.h" />
+    <ClInclude Include="src\components\TextComponent.h" />
     <ClInclude Include="src\components\TransformComponent.h" />
     <ClInclude Include="src\ecs\ECS.h" />
     <ClInclude Include="src\events\CollisionEvent.h" />
@@ -164,12 +177,14 @@
     <ClInclude Include="src\systems\CameraMovementSystem.h" />
     <ClInclude Include="src\systems\CollisionSystem.h" />
     <ClInclude Include="src\systems\DamageSystem.h" />
+    <ClInclude Include="src\systems\RenderHealthBarSystem.h" />
     <ClInclude Include="src\systems\KeyboardControlSystem.h" />
     <ClInclude Include="src\systems\MovementSystem.h" />
     <ClInclude Include="src\systems\ProjectileEmitSystem.h" />
     <ClInclude Include="src\systems\ProjectileSystem.h" />
     <ClInclude Include="src\systems\RenderColliderSystem.h" />
     <ClInclude Include="src\systems\RenderSystem.h" />
+    <ClInclude Include="src\systems\RenderTextSystem.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

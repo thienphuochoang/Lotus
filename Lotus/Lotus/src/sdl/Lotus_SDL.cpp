@@ -10,6 +10,7 @@
 #include "../components/CameraComponent.h"
 #include "../components/ProjectileEmitterComponent.h"
 #include "../components/HealthComponent.h"
+#include "../components/TextComponent.h"
 #include "../systems/MovementSystem.h"
 #include "../systems/RenderSystem.h"
 #include "../systems/AnimationSystem.h"
@@ -20,11 +21,16 @@
 #include "../systems/CameraMovementSystem.h"
 #include "../systems/ProjectileEmitSystem.h"
 #include "../systems/ProjectileSystem.h"
+#include "../systems/RenderTextSystem.h"
+#include "../systems/RenderHealthBarSystem.h"
 #include <SDL.h>
 #include <SDL_image.h>
 #include <glm.hpp>
 #include <iostream>
 #include <fstream>
+#include <imgui.h>
+#include <../imgui/backends/imgui_impl_sdl2.h>
+#include <../imgui/backends/imgui_impl_sdlrenderer2.h>
 using namespace std;
 
 int Lotus_SDL::MAP_WIDTH;
@@ -51,10 +57,19 @@ void Lotus_SDL::Initialize()
         Lotus_Log::Error("Error initializing SDL!!!");
         return;
     }
+
+    if (TTF_Init() != 0)
+    {
+        Lotus_Log::Error("Error initializing SDL TTF!!!");
+        return;
+    }
+
     SDL_DisplayMode displayMode;
     SDL_GetCurrentDisplayMode(0, &displayMode);
     WINDOW_WIDTH = 1280;
     WINDOW_HEIGHT = 720;
+    //WINDOW_WIDTH = displayMode.w;
+    //WINDOW_HEIGHT = displayMode.h;
     window = SDL_CreateWindow("Lotus",
         SDL_WINDOWPOS_CENTERED,
         SDL_WINDOWPOS_CENTERED,
@@ -71,6 +86,12 @@ void Lotus_SDL::Initialize()
         Lotus_Log::Error("Error creating SDL renderer!!!");
         return;
     }
+
+    ImGui::CreateContext();
+    ImGui::StyleColorsLight();
+    // Initialize ImGui for SDL and SDL_Renderer
+    ImGui_ImplSDL2_InitForSDLRenderer(window, renderer);
+    ImGui_ImplSDLRenderer2_Init(renderer);
 
     // Initialize the camera view
     camera.x = 0;
@@ -102,6 +123,16 @@ void Lotus_SDL::ProcessInput()
     // Check for events
     while (SDL_PollEvent(&currentEvents))
     {
+        ImGui_ImplSDL2_ProcessEvent(&currentEvents);
+        ImGuiIO& io = ImGui::GetIO();
+
+        int mouseX, mouseY;
+        const int buttons = SDL_GetMouseState(&mouseX, &mouseY);
+
+        io.MousePos = ImVec2(mouseX, mouseY);
+        io.MouseDown[0] = buttons & SDL_BUTTON(SDL_BUTTON_LEFT);
+        io.MouseDown[1] = buttons & SDL_BUTTON(SDL_BUTTON_RIGHT);
+
         switch (currentEvents.type)
         {
             case SDL_QUIT:
@@ -161,13 +192,26 @@ void Lotus_SDL::Render()
     SDL_RenderClear(renderer);
 
     registry->GetSystem<RenderSystem>().Update(renderer, assets, camera);
+    registry->GetSystem<RenderTextSystem>().Update(renderer, assets, camera);
+    registry->GetSystem<RenderHealthBarSystem>().Update(renderer, assets, camera);
     registry->GetSystem<RenderColliderSystem>().Update(renderer, camera);
+
+    // Start ImGui frame
+    ImGui_ImplSDLRenderer2_NewFrame();
+    ImGui_ImplSDL2_NewFrame();
+    ImGui::NewFrame();
+    ImGui::ShowDemoWindow();
+    ImGui::Render();
+    ImGui_ImplSDLRenderer2_RenderDrawData(ImGui::GetDrawData(), renderer);
 
     SDL_RenderPresent(renderer);
 }
 
 void Lotus_SDL::OnDestroy()
 {
+    ImGui_ImplSDLRenderer2_Shutdown();
+    ImGui_ImplSDL2_Shutdown();
+    ImGui::DestroyContext();
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     SDL_Quit();
@@ -186,12 +230,16 @@ void Lotus_SDL::LoadLevel(int level)
     registry->AddSystem<CameraMovementSystem>();
     registry->AddSystem<ProjectileEmitSystem>();
     registry->AddSystem<ProjectileSystem>();
+    registry->AddSystem<RenderTextSystem>();
+    registry->AddSystem<RenderHealthBarSystem>();
 
     // Adding assets
     assets->AddTexture(renderer, "soldier1-image", "./assets/images/soldier1.png");
     assets->AddTexture(renderer, "soldier2-image", "./assets/images/soldier2.png");
     assets->AddTexture(renderer, "tilemap-image", "./assets/tilemaps/jungle.png");
     assets->AddTexture(renderer, "bullet-image", "./assets/images/bullet.png");
+    assets->AddFont("charriot-font", "./assets/fonts/charriot.ttf", 20);
+    assets->AddFont("pico8-font", "./assets/fonts/pico8.ttf", 10);
 
     // Load the tilemap
     int tileSize = 32;
