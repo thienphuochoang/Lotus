@@ -177,6 +177,7 @@
     <ClInclude Include="src\systems\CameraMovementSystem.h" />
     <ClInclude Include="src\systems\CollisionSystem.h" />
     <ClInclude Include="src\systems\DamageSystem.h" />
+    <ClInclude Include="src\systems\RenderGUISystem.h" />
     <ClInclude Include="src\systems\RenderHealthBarSystem.h" />
     <ClInclude Include="src\systems\KeyboardControlSystem.h" />
     <ClInclude Include="src\systems\MovementSystem.h" />

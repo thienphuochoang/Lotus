@@ -21,6 +21,17 @@ public:
             const auto rigidbody = entity.GetComponent<RigidBodyComponent>();
             transform.position.x += rigidbody.velocity.x * deltaTime;
             transform.position.y += rigidbody.velocity.y * deltaTime;
+
+            bool isEntityOutsideMap = (transform.position.x < 0 ||
+                transform.position.x > Lotus_SDL::MAP_WIDTH ||
+                transform.position.y < 0 ||
+                transform.position.x > Lotus_SDL::MAP_HEIGHT);
+
+            // Remove any entities that moves outside the map boundaries
+            if (isEntityOutsideMap && !entity.HasTag("player"))
+            {
+                entity.Destroy();
+            }
         }
     }
 

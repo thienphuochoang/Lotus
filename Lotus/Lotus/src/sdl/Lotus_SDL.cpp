@@ -23,6 +23,7 @@
 #include "../systems/ProjectileSystem.h"
 #include "../systems/RenderTextSystem.h"
 #include "../systems/RenderHealthBarSystem.h"
+#include "../systems/RenderGUISystem.h"
 #include <SDL.h>
 #include <SDL_image.h>
 #include <glm.hpp>
@@ -197,12 +198,12 @@ void Lotus_SDL::Render()
     registry->GetSystem<RenderColliderSystem>().Update(renderer, camera);
 
     // Start ImGui frame
-    ImGui_ImplSDLRenderer2_NewFrame();
-    ImGui_ImplSDL2_NewFrame();
-    ImGui::NewFrame();
-    ImGui::ShowDemoWindow();
-    ImGui::Render();
-    ImGui_ImplSDLRenderer2_RenderDrawData(ImGui::GetDrawData(), renderer);
+    //ImGui_ImplSDLRenderer2_NewFrame();
+    //ImGui_ImplSDL2_NewFrame();
+    //ImGui::NewFrame();
+    //ImGui::Render();
+    //ImGui_ImplSDLRenderer2_RenderDrawData(ImGui::GetDrawData(), renderer);
+    registry->GetSystem<RenderGUISystem>().Update(renderer, registry);
 
     SDL_RenderPresent(renderer);
 }
@@ -232,6 +233,7 @@ void Lotus_SDL::LoadLevel(int level)
     registry->AddSystem<ProjectileSystem>();
     registry->AddSystem<RenderTextSystem>();
     registry->AddSystem<RenderHealthBarSystem>();
+    registry->AddSystem<RenderGUISystem>();
 
     // Adding assets
     assets->AddTexture(renderer, "soldier1-image", "./assets/images/soldier1.png");
