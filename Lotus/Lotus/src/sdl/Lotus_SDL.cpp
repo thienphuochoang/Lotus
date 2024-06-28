@@ -171,6 +171,7 @@ void Lotus_SDL::Update()
     eventManager->Reset();
     
     // Execute the subscriptions of the events for all systems
+    registry->GetSystem<MovementSystem>().SubscribeToEvents(eventManager);
     registry->GetSystem<DamageSystem>().SubscribeToEvents(eventManager);
     registry->GetSystem<KeyboardControlSystem>().SubscribeToEvents(eventManager);
     registry->GetSystem<ProjectileEmitSystem>().SubscribeToEvents(eventManager);
@@ -240,6 +241,7 @@ void Lotus_SDL::LoadLevel(int level)
     assets->AddTexture(renderer, "soldier2-image", "./assets/images/soldier2.png");
     assets->AddTexture(renderer, "tilemap-image", "./assets/tilemaps/jungle.png");
     assets->AddTexture(renderer, "bullet-image", "./assets/images/bullet.png");
+    assets->AddTexture(renderer, "container-image", "./assets/images/Container_A.png");
     assets->AddFont("charriot-font", "./assets/fonts/charriot.ttf", 20);
     assets->AddFont("pico8-font", "./assets/fonts/pico8.ttf", 10);
 
@@ -294,12 +296,24 @@ void Lotus_SDL::LoadLevel(int level)
     // Create some entities
     Entity soldier2 = registry->CreateEntity();
     // Add components to entity
-    soldier2.AddComponent<TransformComponent>(glm::vec2(500.0, 200.0), glm::vec2(1.0, 1.0), 0.0);
-    soldier2.AddComponent<RigidBodyComponent>(glm::vec2(0.0, 0.0));
+    soldier2.AddComponent<TransformComponent>(glm::vec2(500.0, 200.0), glm::vec2(1.0, 1.0), -90.0);
+    soldier2.AddComponent<RigidBodyComponent>(glm::vec2(50.0, 0.0));
     soldier2.AddComponent<SpriteComponent>("soldier2-image", 2, false, 64, 64);
     soldier2.AddComponent<AnimationComponent>(8, 10, true);
     soldier2.AddComponent<BoxColliderComponent>(32, 32, glm::vec2(16, 16));
     soldier2.AddComponent<ProjectileEmitterComponent>(glm::vec2(100.0, 0.0), 5000, 1000, 50, false);
     soldier2.AddComponent<HealthComponent>(100);
     soldier2.Group("enemies");
+
+    Entity container = registry->CreateEntity();
+    container.AddComponent<TransformComponent>(glm::vec2(800.0, 200.0), glm::vec2(1.0, 1.0), 0.0);
+    container.AddComponent<SpriteComponent>("container-image", 2, false, 256, 128);
+    container.AddComponent<BoxColliderComponent>(256, 128);
+    container.Group("obstacles");
+
+    Entity container2 = registry->CreateEntity();
+    container2.AddComponent<TransformComponent>(glm::vec2(200.0, 200.0), glm::vec2(1.0, 1.0), 0.0);
+    container2.AddComponent<SpriteComponent>("container-image", 2, false, 256, 128);
+    container2.AddComponent<BoxColliderComponent>(256, 128);
+    container2.Group("obstacles");
 }

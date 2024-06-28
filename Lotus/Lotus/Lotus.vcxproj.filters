@@ -25,9 +25,18 @@
     <Filter Include="imgui">
       <UniqueIdentifier>{9d3af74c-9100-499d-a689-7ac2e2d367ee}</UniqueIdentifier>
     </Filter>
+    <Filter Include="lua">
+      <UniqueIdentifier>{9b2a8a94-4a22-42ce-b274-dbba7bc43534}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="scripts">
+      <UniqueIdentifier>{f0cf2dac-7e0a-49bc-b3a1-02ac6c92c077}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="scripts\myscript.lua">
+      <Filter>scripts</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -160,6 +169,21 @@
     </ClInclude>
     <ClInclude Include="src\systems\RenderGUISystem.h">
       <Filter>Header Files\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="libs\lua\include\lauxlib.h">
+      <Filter>lua</Filter>
+    </ClInclude>
+    <ClInclude Include="libs\lua\include\lua.h">
+      <Filter>lua</Filter>
+    </ClInclude>
+    <ClInclude Include="libs\lua\include\lua.hpp">
+      <Filter>lua</Filter>
+    </ClInclude>
+    <ClInclude Include="libs\lua\include\luaconf.h">
+      <Filter>lua</Filter>
+    </ClInclude>
+    <ClInclude Include="libs\lua\include\lualib.h">
+      <Filter>lua</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

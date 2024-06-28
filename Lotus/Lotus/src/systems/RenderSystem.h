@@ -22,12 +22,23 @@ public:
             SpriteComponent spriteComponent;
         };
         std::vector<RenderEntity> renderEntities;
-        
+
         for (auto entity : GetSystemEntities())
         {
             RenderEntity renderEntity;
             renderEntity.spriteComponent = entity.GetComponent<SpriteComponent>();
             renderEntity.transformComponent = entity.GetComponent<TransformComponent>();
+
+            // Bypass rendering entities outside the camera view
+            bool isEntityOutsideTheCameraView = (
+                renderEntity.transformComponent.position.x + (renderEntity.transformComponent.scale.x * renderEntity.spriteComponent.width) < camera.x ||
+                renderEntity.transformComponent.position.x > camera.x + camera.w ||
+                renderEntity.transformComponent.position.y + (renderEntity.transformComponent.scale.y * renderEntity.spriteComponent.height) < camera.y ||
+                renderEntity.transformComponent.position.y > camera.y + camera.h
+                );
+            if (isEntityOutsideTheCameraView && !renderEntity.spriteComponent.isFixed)
+                continue;
+
             renderEntities.emplace_back(renderEntity);
         }
 
@@ -61,7 +72,7 @@ public:
                 &destRect, 
                 transform.rotation,
                 NULL,
-                SDL_FLIP_NONE);
+                sprite.flip);
         }
     }
 };
