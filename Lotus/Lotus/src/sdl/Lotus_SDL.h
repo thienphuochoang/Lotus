@@ -26,7 +26,6 @@ public:
     void Update();
     void Render();
     void OnDestroy();
-    void LoadLevel(int level);
 
     static int WINDOW_WIDTH;
     static int WINDOW_HEIGHT;

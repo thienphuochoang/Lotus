@@ -2,6 +2,7 @@
 #include "../ecs/ECS.h"
 #include "../components/BoxColliderComponent.h"
 #include "../components/ProjectileComponent.h"
+#include "../components/HealthComponent.h"
 #include "../events/CollisionEvent.h"
 #include "../events/EventManager.h"
 

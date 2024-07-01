@@ -75,6 +75,9 @@
     <ClCompile Include="libs\imgui\imgui_widgets.cpp">
       <Filter>imgui</Filter>
     </ClCompile>
+    <ClCompile Include="src\level\Level.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\log\Lotus_Log.h">
@@ -184,6 +187,9 @@
     </ClInclude>
     <ClInclude Include="libs\lua\include\lualib.h">
       <Filter>lua</Filter>
+    </ClInclude>
+    <ClInclude Include="src\level\Level.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

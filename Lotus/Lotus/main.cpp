@@ -12,10 +12,10 @@ void TestLua()
 }
 int main(int argc, char* argv[])
 {
-    //std::unique_ptr<Lotus_SDL> game = std::make_unique<Lotus_SDL>();
-    //game->Initialize();
-    //game->Run();
-    //game->OnDestroy();
-    TestLua();
+    std::unique_ptr<Lotus_SDL> game = std::make_unique<Lotus_SDL>();
+    game->Initialize();
+    game->Run();
+    game->OnDestroy();
+    //TestLua();
     return 0;
 }

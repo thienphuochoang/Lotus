@@ -10,15 +10,68 @@
 #include "../components/BoxColliderComponent.h"
 #include "../components/HealthComponent.h"
 #include "../components/ProjectileEmitterComponent.h"
+//#include <filesystem>
+//namespace fs = std::filesystem;
 class RenderGUISystem : public System
 {
 public:
     RenderGUISystem() = default;
+    
+
+    //struct FileEntry {
+    //    std::string name;
+    //    bool is_directory;
+    //};
+
+    //// Function to get list of files and directories
+    //std::vector<FileEntry> GetDirectoryContents(const std::string& directory) {
+    //    std::vector<FileEntry> entries;
+    //    for (const auto& entry : fs::directory_iterator(directory)) {
+    //        entries.push_back({ entry.path().filename().string(), entry.is_directory() });
+    //    }
+    //    return entries;
+    //}
+
+    //void ShowProjectWindow(const std::string& root_directory) {
+    //    static std::string current_directory = root_directory;
+    //    static std::vector<FileEntry> entries = GetDirectoryContents(current_directory);
+    //    static std::string new_directory = current_directory;
+
+    //    // Show the current directory
+    //    ImGui::Text("Current Directory: %s", current_directory.c_str());
+
+    //    if (ImGui::Button("Up")) {
+    //        new_directory = fs::path(current_directory).parent_path().string();
+    //    }
+
+    //    ImGui::Separator();
+
+    //    for (const auto& entry : entries) {
+    //        if (entry.is_directory) {
+    //            if (ImGui::TreeNode(entry.name.c_str())) {
+    //                if (ImGui::IsItemClicked()) {
+    //                    new_directory = (fs::path(current_directory) / entry.name).string();
+    //                }
+    //                ImGui::TreePop();
+    //            }
+    //        }
+    //        else {
+    //            ImGui::Text("%s", entry.name.c_str());
+    //        }
+    //    }
+
+    //    // Apply directory change after iteration
+    //    if (new_directory != current_directory) {
+    //        current_directory = new_directory;
+    //        entries = GetDirectoryContents(current_directory);
+    //    }
+    //}
     void Update(SDL_Renderer* renderer, std::unique_ptr<EntityManager>& registry)
     {
         ImGui_ImplSDLRenderer2_NewFrame();
         ImGui_ImplSDL2_NewFrame();
         ImGui::NewFrame();
+        //ShowProjectWindow("D:\\Fork\\Lotus\\Lotus\\Lotus\\assets");
         if (ImGui::Begin("Spawn Enemies"))
         {
             static float enemyXPos = 0.0f;
